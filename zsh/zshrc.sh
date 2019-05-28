@@ -10,6 +10,18 @@
 	# This is currently causing problems (fails when you run it anywhere that isn't a git project's root directory)
 	# alias vs="v `git status --porcelain | sed -ne 's/^ M //p'`"
 
+
+
+alias vpn-status="vpncmd /client localhost /cmd accountstatusget"
+alias vpn-connect="vpncmd /client localhost /cmd accountconnect"
+
+alias vpn-disc="vpncmd /client localhost /cmd accountdisconnect"
+alias vpn-list="vpncmd /client localhost /cmd accountlist"
+alias rsync-vfat="rsync -P --modify-window=1"
+alias rsync-reg="rsync -av -P"
+
+alias fixterm='reset; stty sane; tput rs1; clear; echo -e "\033c"'
+
 # Settings
 	export VISUAL=vim
 
@@ -22,6 +34,8 @@ source ~/dotfiles/zsh/plugins/fixls.zsh
 		ls;
 	}
 	alias cd="c"
+
+
 
 # For vim mappings: 
 	stty -ixon

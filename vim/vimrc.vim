@@ -97,3 +97,5 @@
 	"Swap line
 	"Insert blank below and above
 
+set clipboard^=unnamedplus
+
