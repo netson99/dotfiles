@@ -4,8 +4,11 @@
 	setopt inc_append_history # To save every command before it is executed 
 	setopt share_history # setopt inc_append_history
 
+	git config --global push.default current
+
 # Aliases
 	alias v="vim -p"
+	mkdir -p /tmp/log
 	
 	# This is currently causing problems (fails when you run it anywhere that isn't a git project's root directory)
 	# alias vs="v `git status --porcelain | sed -ne 's/^ M //p'`"
@@ -16,15 +19,46 @@
 source ~/dotfiles/zsh/plugins/fixls.zsh
 
 #Functions
-	# Custom cd
-	c() {
-		cd $1;
-		ls;
+	# Loop a command and show the output in vim
+	loop() {
+		echo ":cq to quit\n" > /tmp/log/output 
+		fc -ln -1 > /tmp/log/program
+		while true; do
+			cat /tmp/log/program >> /tmp/log/output ;
+			$(cat /tmp/log/program) |& tee -a /tmp/log/output ;
+			echo '\n' >> /tmp/log/output
+			vim + /tmp/log/output || break;
+			rm -rf /tmp/log/output
+		done;
 	}
-	alias cd="c"
+
+ 	# Custom cd
+ 	c() {
+ 		cd $1;
+ 		ls;
+ 	}
+ 	alias cd="c"
 
 # For vim mappings: 
 	stty -ixon
+
+# Completions
+# These are all the plugin options available: https://github.com/robbyrussell/oh-my-zsh/tree/291e96dcd034750fbe7473482508c08833b168e3/plugins
+#
+# Edit the array below, or relocate it to ~/.zshrc before anything is sourced
+# For help create an issue at github.com/parth/dotfiles
+
+autoload -U compinit
+
+plugins=(
+	docker
+)
+
+for plugin ($plugins); do
+    fpath=(~/dotfiles/zsh/plugins/oh-my-zsh/plugins/$plugin $fpath)
+done
+
+compinit
 
 source ~/dotfiles/zsh/plugins/oh-my-zsh/lib/history.zsh
 source ~/dotfiles/zsh/plugins/oh-my-zsh/lib/key-bindings.zsh
@@ -49,3 +83,4 @@ if [[ "${terminfo[kcud1]}" != "" ]]; then
 fi
 
 source ~/dotfiles/zsh/prompt.sh
+export PATH=$PATH:$HOME/dotfiles/utils

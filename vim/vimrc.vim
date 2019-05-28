@@ -8,6 +8,9 @@
 	set relativenumber 
 	set number
 
+	autocmd Filetype html setlocal sw=2 expandtab
+	autocmd Filetype javascript setlocal sw=4 expandtab
+
 	set cursorline
 	hi Cursor ctermfg=White ctermbg=Yellow cterm=bold guifg=white guibg=yellow gui=bold
 
@@ -40,6 +43,9 @@
 	set incsearch
 
 " Language Specific
+	" Tabs
+		so ~/dotfiles/vim/tabs.vim
+
 	" General
 		inoremap <leader>for <esc>Ifor (int i = 0; i < <esc>A; i++) {<enter>}<esc>O<tab>
 		inoremap <leader>if <esc>Iif (<esc>A) {<enter>}<esc>O<tab>
@@ -93,7 +99,21 @@
 			\ endif
 	augroup END
 
+" Auto load
+	" Triger `autoread` when files changes on disk
+	" https://unix.stackexchange.com/questions/149209/refresh-changed-content-of-file-opened-in-vim/383044#383044
+	" https://vi.stackexchange.com/questions/13692/prevent-focusgained-autocmd-running-in-command-line-editing-mode
+	autocmd FocusGained,BufEnter,CursorHold,CursorHoldI * if mode() != 'c' | checktime | endif
+	set autoread 
+	" Notification after file change
+	" https://vi.stackexchange.com/questions/13091/autocmd-event-for-autoread
+	autocmd FileChangedShellPost *
+	  \ echohl WarningMsg | echo "File changed on disk. Buffer reloaded." | echohl None
+
 " Future stuff
 	"Swap line
 	"Insert blank below and above
 
+" Fix for: https://github.com/fatih/vim-go/issues/1509
+
+filetype plugin indent on
